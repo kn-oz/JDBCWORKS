@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testsuite errors="0" failures="0" name="io.cucumber.core.plugin.JUnitFormatter" skipped="0" tests="1" time="0.968">
+    <testcase classname="Select Query Execute" name="Database içindeki &quot;cron_schedules&quot; tablosundaki ilk 2 kaydın &quot;name&quot; bilgisini doğrulayınız." time="0.881">
+        <system-out><![CDATA[* Database baglantisi kurulur...............................................passed
+* Query02 hazirlanir ve execute edilir......................................passed
+* Result02 Sonuclar islenir.................................................passed
+* Database baglantisi kapatilir.............................................passed
+]]></system-out>
+    </testcase>
+</testsuite>
