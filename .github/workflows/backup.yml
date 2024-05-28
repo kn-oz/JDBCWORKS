@@ -27,16 +27,16 @@ jobs:
           echo "Creating backup branch"
           TIMESTAMP=$(date +"%Y%m%d%H%M%S")
           BRANCH_NAME="backup-$TIMESTAMP"
-          echo "Creating branch $BRANCH_NAME"
-          git checkout -b $BRANCH_NAME || { echo "Branch creation failed"; exit 1; }
+          echo "Branch name: $BRANCH_NAME"
+          git checkout -b $BRANCH_NAME
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
       - name: Add backup remote
         run: |
           echo "Adding remote backup repository"
-          git remote add backup https://${{ secrets.YOUR_PERSONAL_ACCESS_TOKEN }}@github.com/kn-oz/BACKUPREPO.git || { echo "Adding remote failed"; exit 1; }
+          git remote add backup https://${{ secrets.YOUR_PERSONAL_ACCESS_TOKEN }}@github.com/kn-oz/BACKUPREPO.git
 
       - name: Push to backup repository
         run: |
           echo "Pushing to remote repository"
-          git push backup ${{ env.BRANCH_NAME }} || { echo "Push failed"; exit 1; }
+          git push backup ${{ env.BRANCH_NAME }}
