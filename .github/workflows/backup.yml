@@ -29,30 +29,4 @@ jobs:
           BRANCH_NAME="backup-$TIMESTAMP"
           echo "Branch name: $BRANCH_NAME"
           git checkout -b $BRANCH_NAME || { echo "Branch creation failed"; exit 1; }
-          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
-
-      - name: Add backup remote
-        run: |
-          echo "Adding remote backup repository"
-          git remote add backup https://${{ secrets.PAT }}@github.com/kn-oz/BACKUPREPO.git || { echo "Adding remote failed"; exit 1; }
-          git remote -v # List remotes to verify
-
-      - name: Pull changes from backup repository
-        run: |
-          echo "Pulling changes from backup repository"
-          git pull backup main --rebase || echo "No changes to pull"
-
-      # Debugging steps to print environment variables and check remote setup
-      - name: Print environment variables
-        run: env
-
-      - name: Check remote setup
-        run: |
-          echo "Checking remote setup"
-          git remote -v
-          git branch -a
-
-      - name: Push to backup repository
-        run: |
-          echo "Pushing to remote repository"
-          git push backup ${{ env.BRANCH_NAME }} --force || { echo "Push failed"; exit 1; }
+          echo
