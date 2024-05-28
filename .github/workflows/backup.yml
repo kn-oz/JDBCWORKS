@@ -9,7 +9,16 @@ jobs:
   backup:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        shell: bash --login -o pipefail
+
     steps:
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
       - name: Checkout source repository
         uses: actions/checkout@v2
 
