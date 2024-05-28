@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0 # Fetch all branches
 
@@ -25,13 +25,16 @@ jobs:
         run: |
           TIMESTAMP=$(date +"%Y%m%d%H%M%S")
           BRANCH_NAME="backup-$TIMESTAMP"
+          echo "Creating branch $BRANCH_NAME"
           git checkout -b $BRANCH_NAME
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
       - name: Add backup remote
-        run: git remote add backup https://YOUR_PERSONAL_ACCESS_TOKEN@github.com/kn-oz/BACKUPREPO.git
-        env:
-          YOUR_PERSONAL_ACCESS_TOKEN: ${{ secrets.YOUR_PERSONAL_ACCESS_TOKEN }}
+        run: |
+          echo "Adding remote backup repository"
+          git remote add backup https://${{ secrets.YOUR_PERSONAL_ACCESS_TOKEN }}@github.com/kn-oz/backuprepo.git
 
       - name: Push to backup repository
-        run: git push backup ${{ env.BRANCH_NAME }}
+        run: |
+          echo "Pushing to remote repository"
+          git push backup ${{ env.BRANCH_NAME }}
