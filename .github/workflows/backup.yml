@@ -1,49 +1,24 @@
-name: Backup Repository
+# File: .github/workflows/repo-sync.yml
 
 on:
   schedule:
-    - cron: '0 * * * *' # Runs every hour
+    - cron: "*/15 * * * *"
   workflow_dispatch:
 
 jobs:
-  backup:
+  repo-sync:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Fetch all branches
+          persist-credentials: false
+      - name: repo-sync
+        uses: repo-sync/github-sync@v2
+        with:
+          source_repo: "kn-oz/JDBCWORKS" # Your source repository
+          source_branch: "main" # Replace with the branch you want to sync from
+          destination_repo: "kn-oz/BACKUPREPO" # Your destination repository
+          destination_branch: "main" # Replace with the branch you want to sync to in the destination repository
+          github_token: ${{ secrets.PAT }}
 
-      - name: Set up Git
-        run: |
-          echo "Setting up Git configuration"
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
-
-      - name: Create backup branch
-        id: create_branch
-        run: |
-          echo "Creating backup branch"
-          TIMESTAMP=$(date +"%Y%m%d%H%M%S")
-          BRANCH_NAME="backup-$TIMESTAMP"
-          echo "Branch name: $BRANCH_NAME"
-          git checkout -b $BRANCH_NAME || { echo "Branch creation failed"; exit 1; }
-          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
-
-      - name: Add backup remote
-        run: |
-          echo "Adding remote backup repository"
-          git remote add backup https://${{ secrets.YOUR_PERSONAL_ACCESS_TOKEN }}@github.com/kn-oz/BACKUPREPO.git || { echo "Adding remote failed"; exit 1; }
-          git remote -v # List remotes to verify
-
-      - name: Pull changes from backup repository
-        run: |
-          echo "Pulling changes from backup repository"
-          git pull backup main --rebase || echo "No changes to pull" || { echo "Pull failed"; exit 1; }
-
-      - name: Push to backup repository
-        run: |
-          echo "Pushing to remote repository"
-          git push backup ${{ env.BRANCH_NAME }} --force || { echo "Push failed"; exit 1; }
 
