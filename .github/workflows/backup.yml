@@ -42,9 +42,17 @@ jobs:
           echo "Pulling changes from backup repository"
           git pull backup main --rebase || echo "No changes to pull"
 
+      # Debugging steps to print environment variables and check remote setup
+      - name: Print environment variables
+        run: env
+
+      - name: Check remote setup
+        run: |
+          echo "Checking remote setup"
+          git remote -v
+          git branch -a
+
       - name: Push to backup repository
         run: |
           echo "Pushing to remote repository"
           git push backup ${{ env.BRANCH_NAME }} --force || { echo "Push failed"; exit 1; }
-
-
