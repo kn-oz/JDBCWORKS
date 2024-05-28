@@ -36,7 +36,12 @@ jobs:
           echo "Adding remote backup repository"
           git remote add backup https://${{ secrets.YOUR_PERSONAL_ACCESS_TOKEN }}@github.com/kn-oz/BACKUPREPO.git
 
+      - name: Pull changes from backup repository
+        run: |
+          echo "Pulling changes from backup repository"
+          git pull backup main --rebase || echo "No changes to pull"
+
       - name: Push to backup repository
         run: |
           echo "Pushing to remote repository"
-          git push backup ${{ env.BRANCH_NAME }}
+          git push backup ${{ env.BRANCH_NAME }} --force
