@@ -11,30 +11,32 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Fetch all branches
 
       - name: Set up Git
         run: |
+          echo "Setting up Git configuration"
           git config --global user.name 'github-actions'
           git config --global user.email 'github-actions@github.com'
 
       - name: Create backup branch
         id: create_branch
         run: |
+          echo "Creating backup branch"
           TIMESTAMP=$(date +"%Y%m%d%H%M%S")
           BRANCH_NAME="backup-$TIMESTAMP"
           echo "Creating branch $BRANCH_NAME"
-          git checkout -b $BRANCH_NAME
+          git checkout -b $BRANCH_NAME || { echo "Branch creation failed"; exit 1; }
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
       - name: Add backup remote
         run: |
           echo "Adding remote backup repository"
-          git remote add backup https://${{ secrets.YOUR_PERSONAL_ACCESS_TOKEN }}@github.com/kn-oz/backuprepo.git
+          git remote add backup https://${{ secrets.YOUR_PERSONAL_ACCESS_TOKEN }}@github.com/kn-oz/BACKUPREPO.git || { echo "Adding remote failed"; exit 1; }
 
       - name: Push to backup repository
         run: |
           echo "Pushing to remote repository"
-          git push backup ${{ env.BRANCH_NAME }}
+          git push backup ${{ env.BRANCH_NAME }} || { echo "Push failed"; exit 1; }
