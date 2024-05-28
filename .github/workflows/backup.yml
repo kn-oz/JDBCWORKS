@@ -30,3 +30,8 @@ jobs:
           echo "Branch name: $BRANCH_NAME"
           git checkout -b $BRANCH_NAME || { echo "Branch creation failed"; exit 1; }
           echo
+
+      - name: Push backup branch to backup repository
+        run: |
+          echo "Pushing backup branch to backup repository"
+          git push https://github.com/kn-oz/BACKUPREPO.git $BRANCH_NAME
