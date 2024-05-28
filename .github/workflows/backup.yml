@@ -10,28 +10,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # Fetch all branches
+      - name: Checkout source repository
+        uses: actions/checkout@v2
 
       - name: Set up Git
         run: |
-          echo "Setting up Git configuration"
           git config --global user.name 'github-actions'
           git config --global user.email 'github-actions@github.com'
 
       - name: Create backup branch
-        id: create_branch
         run: |
-          echo "Creating backup branch"
           TIMESTAMP=$(date +"%Y%m%d%H%M%S")
           BRANCH_NAME="backup-$TIMESTAMP"
-          echo "Branch name: $BRANCH_NAME"
-          git checkout -b $BRANCH_NAME || { echo "Branch creation failed"; exit 1; }
-          echo
-
-      - name: Push backup branch to backup repository
-        run: |
-          echo "Pushing backup branch to backup repository"
-          git push https://github.com/kn-oz/BACKUPREPO.git $BRANCH_NAME
+          git checkout -b $BRANCH_NAME
+          git add .
+          git commit -m "Backup on $TIMESTAMP"
+          git remote add backup https://github.com/kn-oz/BACKUPREPO.git
+          git push -u backup $BRANCH_NAME
+        env:
+          PAT: ${{ secrets.PAT }}
